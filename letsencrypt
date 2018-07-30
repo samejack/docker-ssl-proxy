@@ -1,0 +1,13 @@
+server {
+        listen 88; 
+        listen [::]:88;
+
+        root /var/www/letsencrypt;
+        index index.html index.htm;
+
+        server_name localhost;
+
+        location / {
+                try_files $uri $uri/ =404;
+        }
+}
