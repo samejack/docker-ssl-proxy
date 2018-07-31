@@ -1,2 +1,2 @@
 all:
-	docker build -t ssl-proxy:latest ./
+	docker build -t samejack/ssl-proxy:latest ./

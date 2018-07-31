@@ -80,7 +80,7 @@ echo "Make haproxy.cfg file...\n";
 exec('php /usr/share/hle/haproxy.cfg.php > /etc/haproxy/haproxy.cfg', $output, $returnCode);
 if ($returnCode !== 0) throw new Exception("HAProxy config file make fail...\n");
 $currentHaproxyMd5 = md5(file_get_contents('/etc/haproxy/haproxy.cfg'));
-$oldHAproxyMd5 = file_get_contents('/etc/haproxy/haproxy.cfg.md5');
+$oldHAproxyMd5 = is_file('/etc/haproxy/haproxy.cfg.md5') ? file_get_contents('/etc/haproxy/haproxy.cfg.md5') : '';
 if ($currentHaproxyMd5 !== $oldHAproxyMd5) {
      $needRestart = true;
 }
