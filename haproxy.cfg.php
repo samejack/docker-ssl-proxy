@@ -3,9 +3,8 @@ $accountList = [];
 $hleConfPath = '/etc/hle';
 if ($handle = opendir($hleConfPath)) {
     while (false !== ($entry = readdir($handle))) {
-        $pathInfo = pathinfo($entry);
         if ($entry != "." && $entry != "..") {
-            if (!filter_var($pathInfo['filename'], FILTER_VALIDATE_EMAIL)) {
+            if (!filter_var($entry, FILTER_VALIDATE_EMAIL)) {
                 throw new Exception('File name not a email format.');
             }
             $accountConf = json_decode(file_get_contents($hleConfPath . '/' . $entry), true);
@@ -13,7 +12,7 @@ if ($handle = opendir($hleConfPath)) {
                 if (!isset($conf['domain'])) throw new Exception('"domain" undefined.');
                 if (!isset($conf['server'])) throw new Exception('"server" undefined.');
                 $accountList[] = [
-                    'email' => $pathInfo['filename'],
+                    'email' => $entry,
                     'domain' => $conf['domain'],
                     'server' => $conf['server']
                 ];
