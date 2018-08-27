@@ -142,7 +142,7 @@ foreach ($accountList as &$account) {
     echo '    http-request set-header X-Forwarded-Port %[dst_port]' . "\n";
     echo '    http-request set-header X-Forwarded-Host %[hdr(host)]' . "\n";
     foreach ($account['server'] as $i => $server) {
-        echo '    server ' . $account['domain'][0] . '-' . ($i + 1) . ' ' . $server ." check\n";
+        echo '    server ' . 'node-' . ($i + 1) . '_' . $server . ' ' . $server ." check\n";
     }
     echo "\n";
 }

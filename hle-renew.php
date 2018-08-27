@@ -86,7 +86,7 @@ if ($currentHaproxyMd5 !== $oldHAproxyMd5) {
 }
 
 if ($needRestart) {
-    exec('haproxy -c -f /etc/haproxy/haproxy.cfg 2>&1', $output, $returnCode);
+    exec('haproxy -c -dr -f /etc/haproxy/haproxy.cfg 2>&1', $output, $returnCode);
     if ($returnCode !== 0) throw new Exception(implode("\n", $output) . "\n");
 
     echo "Restart HAProxy...\n";
