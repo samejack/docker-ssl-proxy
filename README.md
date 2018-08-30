@@ -10,7 +10,10 @@ HAProxy plug Let's encrypt auto request and renew function.
 docker pull samejack/ssl-proxy
 ```
 ### Make config as follows:
+```
 vim ./hle/email@example.com
+```
+Filename email@example.com is your let's encrypt account, and config file content as follows:
 ```
 [
     {
@@ -36,6 +39,11 @@ docker run -it \
     --volume ssl:/etc/ssl/le-storage \
     --volume your-document-root:/var/www/html \
     samejack/ssl-proxy:latest
+```
+
+### How to reload config force
+```
+docker exec -it ssl-proxy php /usr/share/hle/hle-renew.php
 ```
 
 ## Docker environment
