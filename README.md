@@ -40,13 +40,19 @@ docker run -it \
     --volume your-document-root:/var/www/html \
     samejack/ssl-proxy:latest
 ```
+#### Volume Defined
+Path  |Description|
+------|-----------|
+/etc/hle|SSL Proxy Config Files|
+/etc/ssl/le-storage|Certification File Path|
+/var/www/html|Default WWW Document Root|
 
 ### How to reload config force
 ```
 docker exec -it ssl-proxy php /usr/share/hle/hle-renew.php
 ```
 
-## Docker environment
+## Docker Environment
 Name  |Default|Description|
 ------|------|------|
 HLE_INTERVAL|300|Config file check interval|
