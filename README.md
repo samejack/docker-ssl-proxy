@@ -39,10 +39,10 @@ docker run -it \
 ```
 
 ## Docker environment
-Name  |Default|
-------|------|
-HLE_INTERVAL|300|
-HLE_STAGING|(Undefined)|
+Name  |Default|Description|
+------|------|------|
+HLE_INTERVAL|300|Config file check interval|
+HLE_STAGING|(Undefined)|Let's encrypt staging mode|
 
 ## Developer
 Make docker image in linux OS.
