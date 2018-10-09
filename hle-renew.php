@@ -36,43 +36,47 @@ if ($handle = opendir($hleConfPath)) {
 
 $needRestart = false;
 foreach ($accountList as $accountInfo) {
+    try {
 
-    $account = !\LE_ACME2\Account::exists($accountInfo['email']) ?
-        \LE_ACME2\Account::create($accountInfo['email']) :
-        \LE_ACME2\Account::get($accountInfo['email']);
+        $account = !\LE_ACME2\Account::exists($accountInfo['email']) ?
+            \LE_ACME2\Account::create($accountInfo['email']) :
+            \LE_ACME2\Account::get($accountInfo['email']);
 
-    $subjects = $accountInfo['domain'];
+        $subjects = $accountInfo['domain'];
 
-    echo "Account: ${accountInfo['email']}\n";
-    echo 'Domain: ' . implode(', ', $subjects) . "\n";
+        echo "Account: ${accountInfo['email']}\n";
+        echo 'Domain: ' . implode(', ', $subjects) . "\n";
 
-    $order = !\LE_ACME2\Order::exists($account, $subjects) ?
-        \LE_ACME2\Order::create($account, $subjects) :
-        \LE_ACME2\Order::get($account, $subjects);
+        $order = !\LE_ACME2\Order::exists($account, $subjects) ?
+            \LE_ACME2\Order::create($account, $subjects) :
+            \LE_ACME2\Order::get($account, $subjects);
 
-    if ($order->authorize(\LE_ACME2\Order::CHALLENGE_TYPE_HTTP)) {
-        $order->finalize();
-    }
-
-    if ($order->isCertificateBundleAvailable()) {
-        $bundle = $order->getCertificateBundle();
-
-        $pemFilepath = '/etc/haproxy/' . $accountInfo['domain'][0] . '.pem';
-        $haproxyPemContent = '';
-        $haproxyPemContent .= file_get_contents($bundle->path . $bundle->certificate);
-        $haproxyPemContent .= file_get_contents($bundle->path . $bundle->intermediate) . "\n";
-        $haproxyPemContent .= file_get_contents($bundle->path . $bundle->private);
-        $currentMd5 = md5($haproxyPemContent);
-        $oldMd5 = is_file($pemFilepath . '.md5') ? file_get_contents($pemFilepath . '.md5') : '';
-        if ($oldMd5 !== $currentMd5) {
-             file_put_contents($pemFilepath . '.md5', $currentMd5);
-             file_put_contents($pemFilepath, $haproxyPemContent);
-             echo "SSL pem file renew. ($pemFilepath)\n";
-             $needRestart |= true;
+        if ($order->authorize(\LE_ACME2\Order::CHALLENGE_TYPE_HTTP)) {
+            $order->finalize();
         }
-        $order->enableAutoRenewal();
-    }
 
+        if ($order->isCertificateBundleAvailable()) {
+            $bundle = $order->getCertificateBundle();
+
+            $pemFilepath = '/etc/haproxy/' . $accountInfo['domain'][0] . '.pem';
+            $haproxyPemContent = '';
+            $haproxyPemContent .= file_get_contents($bundle->path . $bundle->certificate);
+            $haproxyPemContent .= file_get_contents($bundle->path . $bundle->intermediate) . "\n";
+            $haproxyPemContent .= file_get_contents($bundle->path . $bundle->private);
+            $currentMd5 = md5($haproxyPemContent);
+            $oldMd5 = is_file($pemFilepath . '.md5') ? file_get_contents($pemFilepath . '.md5') : '';
+            if ($oldMd5 !== $currentMd5) {
+                file_put_contents($pemFilepath . '.md5', $currentMd5);
+                file_put_contents($pemFilepath, $haproxyPemContent);
+                echo "SSL pem file renew. ($pemFilepath)\n";
+                $needRestart |= true;
+            }
+            $order->enableAutoRenewal();
+        }
+
+    } catch (Exception $execption) {
+        echo $execption;
+    }
 }
 
 # make haproxy config and check
