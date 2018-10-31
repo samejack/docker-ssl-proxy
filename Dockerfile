@@ -34,6 +34,7 @@ RUN apt-get remove --purge -y software-properties-common && \
 ADD nginx.conf             /etc/nginx/nginx.conf
 ADD ssl.pem                /etc/haproxy/ssl.pem
 ADD haproxy.cfg            /etc/haproxy/haproxy.cfg
+ADD haproxy.cfg            /etc/haproxy/haproxy.cfg.init
 ADD sv-haproxy.conf        /etc/supervisor/conf.d
 ADD sv-nginx.conf          /etc/supervisor/conf.d
 ADD sv-renew.conf          /etc/supervisor/conf.d

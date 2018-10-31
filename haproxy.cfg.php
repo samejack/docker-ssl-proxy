@@ -1,9 +1,12 @@
 <?php
-$accountList = [];
+
 $hleConfPath = '/etc/hle';
+$pemPath = '/etc/hle/pem';
+
+$accountList = [];
 if ($handle = opendir($hleConfPath)) {
     while (false !== ($entry = readdir($handle))) {
-        if ($entry != "." && $entry != "..") {
+        if ($entry !== '.' && $entry !== '..' && is_file($hleConfPath . '/' . $entry)) {
             if (!filter_var($entry, FILTER_VALIDATE_EMAIL)) {
                 throw new Exception('File name not a email format.');
             }
@@ -85,7 +88,8 @@ foreach ($accountList as &$account) {
 $crtConfString = '';
 foreach ($accountList as &$account) {
     foreach ($account['domain'] as &$hostname) {
-        $crtConfString .= 'crt /etc/haproxy/' . $account['domain'][0] . '.pem ';
+        $crtFilePath = $pemPath  . '/' . $account['domain'][0] . '.pem';
+        if (is_file($crtFilePath)) $crtConfString .= 'crt ' . $crtFilePath . ' ';
     }
 }
 ?>
