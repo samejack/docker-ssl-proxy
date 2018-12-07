@@ -31,6 +31,7 @@ RUN apt-get remove --purge -y software-properties-common && \
     rm -rf /usr/share/man/??_* && \
     rm -rf /var/cache/apk/*
 
+# Setup configuration files
 ADD nginx.conf             /etc/nginx/nginx.conf
 ADD ssl.pem                /etc/haproxy/ssl.pem
 ADD haproxy.cfg            /etc/haproxy/haproxy.cfg

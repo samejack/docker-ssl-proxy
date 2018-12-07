@@ -79,8 +79,10 @@ foreach ($accountList as $accountInfo) {
     }
 
     // renew
+    $bundle = null;
     try {
         if ($order->isCertificateBundleAvailable()) {
+            $bundle = $order->getCertificateBundle();
             $order->enableAutoRenewal();
         }
     } catch (Exception $exception) {
@@ -88,8 +90,8 @@ foreach ($accountList as $accountInfo) {
     }
 
     // make PEM file
-    $bundle = $order->getCertificateBundle();
-    if (is_file($bundle->path . $bundle->certificate)
+    if (!is_null($bundle)
+        && is_file($bundle->path . $bundle->certificate)
         && is_file($bundle->path . $bundle->intermediate)
         && is_file($bundle->path . $bundle->private)
     ) {
